@@ -1,0 +1,34 @@
+# Neovim swap/backup/undo
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*~
+
+# Undo files
+.undodir/
+
+# Backup directory
+.backup/
+
+# Lazy.nvim plugin data
+/lazy-lock.json
+/lazy/
+
+# LuaLS (Lua Language Server) junk
+/.luarc.json
+/.luarc.jsonc
+
+# Node/npm 
+/node_modules/
+/package-lock.json
+
+# Python virtualenvs 
+/.venv/
+/env/
+/__pycache__/
+
+# Logs
+log/
+*.log
