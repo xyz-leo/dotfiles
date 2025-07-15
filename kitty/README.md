@@ -1,9 +1,17 @@
-## Clone and build Kitty
+# Kitty Setup Guide
+
+# Clone and Build Kitty
 git clone https://github.com/kovidgoyal/kitty.git && cd kitty
 ./dev.sh build
 
-## Kitty official website
-https://sw.kovidgoyal.net/kitty/
+# Copy kitty.conf
+cp ./kitty.conf ~/.config/kitty/
 
-## Resizing Windows
-https://sw.kovidgoyal.net/kitty/layouts/#resizing-windows
+# Themes
+kitty +kitten themes
+
+# Kitty Official Website
+echo "https://sw.kovidgoyal.net/kitty/"
+
+# Resizing Windows Documentation
+echo "https://sw.kovidgoyal.net/kitty/layouts/#resizing-windows"
