@@ -5,7 +5,7 @@ git clone https://github.com/kovidgoyal/kitty.git && cd kitty
 ./dev.sh build
 
 # Copy kitty.conf
-cp ./kitty.conf ~/.config/kitty/
+cd dotfiles && cd kitty && cp kitty.conf ~/.config/kitty/
 
 # Themes
 kitty +kitten themes
