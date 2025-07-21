@@ -4,7 +4,7 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
 
 ## Features
 
-- LSP support for Python (`pyright`), JavaScript/TypeScript (`typescript-language-server`), and HTML
+- LSP support via Mason for Python (`pyright`), JavaScript/TypeScript (`typescript-language-server`), HTML and CSS
 - Autocompletion using `nvim-cmp` and `LuaSnip`
 - Syntax highlighting with `nvim-treesitter`
 - Auto-closing tags and pairs
@@ -29,45 +29,37 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
 
 ## Requirements
 
-- Neovim 0.9 or newer
+- Neovim 0.9 or newer (newer recommended)
 - Node.js (for JavaScript LSP)
-  ```bash
-  npm install -g typescript typescript-language-server
-  ```
-- Python with `pyright`
-  ```bash
-  pip install pyright
-  ```
-- Python virtual environment with `debugpy` at `~/.virtualenvs/debugpy/`
+- Python 3 (for Python LSP and debugging)
+- Optional: Python virtual environment with `debugpy` installed at `~/.virtualenvs/debugpy/`
+
+# LSP: NOTE
+# Pyright, HTML, typescript-language-server are installed and managed automatically via Mason.
+# You do NOT need to install them manually.
 
 ## Setup
 
 1. Clone this repository to your Neovim config directory:
    ```bash
-   git clone <this-repo-url> ~/.config/nvim
+   git clone https://github.com/xyz-leo/dotfiles && mv dotfiles/nvim ~/.config/nvim
    ```
 
 2. Launch Neovim and sync plugins:
-   ```vim
+   ```nvim
    :Lazy sync
    ```
 
-3. Install Treesitter languages:
-   ```vim
-   :TSInstall javascript
-   ```
-
-4. (Optional) Install LSP servers via Mason:
-   ```vim
-   :MasonInstall pyright
-   ```
 
 ## Testing
 
 Open any `.py`, `.js`, or `.html` file and run:
 
-```vim
+```nvim
 :LspInfo
 ```
 
 You should see the correct language server active.
+
+## Download latest neovim (recommended)
+https://github.com/neovim/neovim/releases

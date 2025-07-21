@@ -1,3 +1,4 @@
+-- plugins/lsp.lua
 return {
   {
     "neovim/nvim-lspconfig",
@@ -5,38 +6,44 @@ return {
       local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Pyright (Python)
+      -- Configura os LSPs
       lspconfig.pyright.setup {
         capabilities = capabilities,
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = "basic"
-            }
-          }
-        }
       }
 
-      -- HTML
       lspconfig.html.setup {
         capabilities = capabilities,
-      }
-
-      -- JavaScript / TypeScript using typescript-language-server (installed with npm)
-      lspconfig.tsserver.setup {
-        capabilities = capabilities,
-        cmd = { "typescript-language-server", "--stdio" },
-        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-        root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
+        init_options = {
+          configurationSection = { "html", "css", "javascript" },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+        },
       }
     end,
   },
-
-  -- Python debugger
+  
   {
-    "mfussenegger/nvim-dap-python",
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
     config = function()
-      require("dap-python").setup("~/.virtualenvs/debugpy/bin/python")
+      require("mason").setup()
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "neovim/nvim-lspconfig",
+    },
+    config = function()
+      require("mason-lspconfig").setup {
+        ensure_installed = { "pyright", "html", "ts_ls", "cssls" },
+        automatic_installation = true,
+      }
     end,
   },
 }
+
