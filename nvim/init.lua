@@ -14,3 +14,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- init lazy.nvim
 require("config.lazy")
+
+-- init boilertplate config to html and css
+require("config.boilerplate")
