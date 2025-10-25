@@ -21,6 +21,7 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
     │   └── lazy.lua
     └── plugins/
         ├── cmp.lua
+        ├── copilot.lua
         ├── lsp.lua
         ├── theme.lua
         ├── treesitter.lua
@@ -50,6 +51,10 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
    :Lazy sync
    ```
 
+3. If you want to use copilot, you need to sign in on github with:
+    ```nvim
+    :Copilot auth
+    ```
 
 ## Testing
 
@@ -60,6 +65,15 @@ Open any `.py`, `.js`, or `.html` file and run:
 ```
 
 You should see the correct language server active.
+
+
+## Copilot
+
+The mappings are:
+C-l -> Autocomplete
+C-, -> Previous suggestion
+C-. -> Next suggestion
+
 
 ## Download latest neovim (recommended)
 https://github.com/neovim/neovim/releases

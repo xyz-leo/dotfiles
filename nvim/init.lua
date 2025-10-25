@@ -17,3 +17,4 @@ require("config.lazy")
 
 -- init boilertplate config to html and css
 require("config.boilerplate")
+
