@@ -26,6 +26,7 @@
         "backlight",
         "memory",
         "pulseaudio",
+	"tray",
 	"custom/lock",
         "custom/power"
     ],
