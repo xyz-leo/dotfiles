@@ -74,4 +74,19 @@ cp -r dotfiles/hyprland/wofi ~/.config/
 ```
 
 ## 4. Reboot
+After rebooting, the environment should be working fine.
+
+## 5. Hyprland Shortcuts
+Some useful shortcuts (you can change it in ~/.config/hypr/hyprland.conf)
+```
+Super + Q = Terminal
+Super + W = Close active window
+Super + E = File explorer
+Super + P = App launcher
+Super + L = Lock screen
+Super + B = Browser
+Super + Num = Switch workspaces
+Super + Shift + Num = Move active window to selected workspace
+```
+
 Thank you. - Leo
