@@ -42,8 +42,6 @@ sudo pacman -S hyprland \
     git
 ```
 
----
-
 ## 2. Recommended fonts:
 
 ```bash
@@ -53,8 +51,6 @@ sudo pacman -S ttf-jetbrains-mono-nerd \
     noto-fonts \
     noto-fonts-emoji
 ```
-
----
 
 ## 3. Applying Dotfiles
 
@@ -72,12 +68,10 @@ git clone https://github.com/xyz-leo/dotfiles.git
 ```
 
 ```bash
-cp -r dottfiles/hypr ~/.config/
-cp -r dotfiles/waybar ~/.config/
-cp -r dotfiles/wofi ~/.config/
+cp -r dotfiles/hyprland/hypr ~/.config/
+cp -r dotfiles/hyprland/waybar ~/.config/
+cp -r dotfiles/hyprland/wofi ~/.config/
 ```
-
----
 
 ## 4. Reboot
 Thank you. - Leo
