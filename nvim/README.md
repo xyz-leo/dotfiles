@@ -38,6 +38,7 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
 # LSP: NOTE
 # Pyright, HTML, typescript-language-server are installed and managed automatically via Mason.
 # You do NOT need to install them manually.
+# Install npm and node
 
 ## Setup
 

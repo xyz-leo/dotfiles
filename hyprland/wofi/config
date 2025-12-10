@@ -1,0 +1,7 @@
+mode=drun
+show=drun
+prompt=Run:
+width=35%
+height=40%
+location=center
+hide_scroll=true

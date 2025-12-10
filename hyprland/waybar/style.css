@@ -1,0 +1,153 @@
+/* ====== BASE GLOBAL ====== */
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0.35); /* barra semi-transparente */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+}
+
+/* ====== MODULES ====== */
+
+#clock,
+#cpu,
+#memory,
+#temperature,
+#network,
+#pulseaudio,
+#backlight,
+#battery,
+#battery#bat2,
+#tray,
+#mpd,
+#idle_inhibitor,
+#power-profiles-daemon,
+#keyboard-state,
+#sway-language,
+#custom-media,
+#custom-power {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+/* Hover */
+#clock:hover,
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#network:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover,
+#battery#bat2:hover,
+#tray:hover,
+#mpd:hover,
+#idle_inhibitor:hover,
+#power-profiles-daemon:hover,
+#keyboard-state:hover,
+#sway-language:hover,
+#custom-media:hover,
+#custom-power:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ====== WORKSPACES ====== */
+
+#workspaces {
+  margin: 0 6px;
+}
+
+#workspaces button {
+  margin: 0 4px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.10);
+  color: #ffffff;
+  border: none;
+  transition: 0.15s;
+}
+
+#workspaces button:hover {
+  background: rgba(255,255,255,0.20);
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+  background: linear-gradient(90deg, #00b7ff, #00ff95);
+  color: #000000;
+  font-weight: 600;
+}
+
+#workspaces button.urgent {
+  background: #ff4a4a;
+  color: white;
+}
+
+/* ====== WINDOW TITLE ====== */
+
+#window {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  color: #ffffff;
+  margin: 0 6px;
+}
+
+/* ====== SPECIAL STATES ====== */
+
+#pulseaudio.muted {
+  color: #ff6666;
+}
+
+#network.disconnected {
+  color: #ff6666;
+}
+
+#battery.warning {
+  background: rgba(255, 150, 0, 0.30);
+}
+
+#battery.critical {
+  background: rgba(255, 0, 0, 0.35);
+}
+
+/* ====== TRAY ====== */
+#tray {
+  padding-right: 14px;
+}
+
+/* ====== CUSTOM POWER BUTTON ====== */
+
+#custom-power {
+  background: rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+#custom-power:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+#custom-firefox,
+#custom-nemg,
+#custom-kitty {
+  padding: 0 10px;
+  color: #fff;
+}
+
+#custom-firefox:hover,
+#custom-nemo:hover,
+#custom-kitty:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+

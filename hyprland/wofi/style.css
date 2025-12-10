@@ -1,0 +1,30 @@
+window {
+    background-color: rgba(20, 20, 20, 0.90);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+#entry {
+    padding: 8px;
+    border-radius: 8px;
+    margin: 4px 0;
+}
+
+#entry:selected {
+    background: linear-gradient(90deg, #00b7ff, #00ff95);
+    color: black;
+    font-weight: bold;
+}
+
+#input {
+    background: rgba(255, 255, 255, 0.10);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+#text {
+    color: white;
+}
+
