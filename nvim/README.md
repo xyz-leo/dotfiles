@@ -72,5 +72,7 @@ Telescope configuration can be changed in the plugins/telescope.lua file, if you
 Keybindings that I'm currently using:
 `<leader>` + `f (search files), F (search files from user home), g (grep text), h (help)`
 
+Live grep `<leader> + g`: this functionality requires `ripgrep` to be installed on your system. You can tipically install it using your system's package manager (e.g., sudo pacman -S ripgrep).
+
 ## Download latest neovim (recommended)
 https://github.com/neovim/neovim/releases
