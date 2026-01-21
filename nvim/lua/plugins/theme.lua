@@ -126,13 +126,13 @@ return {
   -- },
 
   -- Dracula
-   {
-     "Mofiqul/dracula.nvim",
-     priority = 1000,
-     config = function()
-       vim.cmd.colorscheme("dracula")
-     end,
-   },
+  -- {
+  --   "Mofiqul/dracula.nvim",
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme("dracula")
+  --   end,
+  -- },
 
   -- Solarized
   -- {
@@ -152,12 +152,24 @@ return {
   --   end,
   -- },
 
-  -- One Dark
-  -- {
-  --   "navarasu/onedark.nvim",
-  --   priority = 1000,
-  --   config = function()
-  --     require("onedark").load()
-  --   end,
-  -- },
+ --  One Dark
+   {
+    "navarasu/onedark.nvim",
+     priority = 1000,
+     config = function()
+       require("onedark").setup {
+         style = "deep",
+         transparent = true,
+         code_style = {
+           comments = "italic",
+           keywords = "bold",
+           functions = "none",
+           strings = "none",
+           variables = "none",
+         },
+       }
+       require("onedark").load()
+     end,
+   },
 }
+
