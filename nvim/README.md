@@ -25,6 +25,7 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
         ├── lsp.lua
         ├── theme.lua
         ├── treesitter.lua
+        ├── telescope.lua
         └── others.lua
 ```
 
@@ -36,8 +37,8 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
 - Optional: Python virtual environment with `debugpy` installed at `~/.virtualenvs/debugpy/`
 
 # LSP: NOTE
-# Pyright, HTML, typescript-language-server are installed and managed automatically via Mason.
-# You do NOT need to install them manually.
+
+Install the desired LSP or Linters with :Mason
 
 ## Setup
 
@@ -54,18 +55,6 @@ This is a modular Neovim setup using [lazy.nvim](https://github.com/folke/lazy.n
 3. If you want to use copilot, you need to sign in on github with:
     ```nvim
     :Copilot auth
-    ```
-
-## Testing
-
-Open any `.py`, `.js`, or `.html` file and run:
-
-```nvim
-:LspInfo
-```
-
-You should see the correct language server active.
-
 
 ## Copilot
 
@@ -74,6 +63,14 @@ C-l -> Autocomplete
 C-, -> Previous suggestion
 C-. -> Next suggestion
 
+## Leader key
+`<Space>` is the Leader key.
+
+## Telescope
+Telescope configuration can be changed in the plugins/telescope.lua file, if you want to.
+
+Keybindings that I'm currently using:
+`<leader>` + `f (search files), F (search files from user home), g (grep text), h (help)`
 
 ## Download latest neovim (recommended)
 https://github.com/neovim/neovim/releases
