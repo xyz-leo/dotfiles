@@ -89,6 +89,15 @@ LSP keymaps (buffer-local, active once a server attaches):
 | `<leader>rn` | Rename symbol |
 | `<leader>ca` | Code action |
 
+### Ruby LSP
+In order to `ruby_lsp` to work, you need those environment variables:
+
+```
+export GEM_HOME="$HOME/.gem"
+export GEM_PATH="$GEM_HOME"
+export PATH="$GEM_HOME/bin:$PATH"
+```
+
 ## Completion
 
 [blink.cmp](https://github.com/saghen/blink.cmp) (`lua/plugins/completion.lua`) provides the
