@@ -1,0 +1,201 @@
+/**
+ * Rofi theme: Ruby Noir
+ * Paired with the "Ruby Noir" kitty.conf color scheme (dark, muted red/ruby accents)
+ *
+ * Usage:
+ *   rofi -show drun -theme ~/Probe/ruby-noir.rasi
+ *
+ * Or make it permanent:
+ *   mkdir -p ~/.config/rofi
+ *   cp ruby-noir.rasi ~/.config/rofi/config.rasi
+ */
+
+* {
+    /* base palette, taken from kitty.conf */
+    bg0:          #120d0eE6; /* background, ~90% opacity to echo kitty's background_opacity */
+    bg1:          #1a1314FF; /* color0 */
+    bg2:          #251b1cFF; /* alt row, between bg1 and bg3 */
+    bg3:          #4a3638FF; /* color8 / borders */
+
+    fg0:          #e0d4d4FF; /* foreground / color15 */
+    fg1:          #c9b8b9FF; /* color7, dimmer text */
+
+    accent:       #b83b4bFF; /* color1, cursor & selection background */
+    accent-bright:#d9525fFF; /* color9 */
+    urgent:       #a15c72FF; /* color5, magenta as urgent marker */
+
+    selected-fg:  #120d0eFF; /* text on top of accent, matches selection_foreground */
+
+    background-color: transparent;
+    text-color:        @fg0;
+
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+configuration {
+    modi:                "drun,run,window";
+    show-icons:           true;
+    icon-theme:           "Papirus";
+    drun-display-format:  "{name}";
+    display-drun:         "  Apps";
+    display-run:          "  Run";
+    display-window:       "  Window";
+    disable-history:      false;
+}
+
+window {
+    transparency:  "real";
+    background-color: @bg0;
+    text-color:     @fg0;
+
+    location: center;
+    anchor:   center;
+    width:    600px;
+
+    border:        2px;
+    border-color:  @accent;
+    border-radius: 14px;
+
+    padding: 18px;
+}
+
+mainbox {
+    background-color: transparent;
+    children:          [ inputbar, listview ];
+    spacing:           14px;
+    padding:           0px;
+}
+
+/* search box ---------------------------------------------------- */
+
+inputbar {
+    background-color: @bg1;
+    text-color:        @fg0;
+
+    border:        1px;
+    border-color:  @bg3;
+    border-radius: 10px;
+
+    padding: 10px 14px;
+    spacing: 10px;
+
+    children: [ prompt, entry ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color:        @accent-bright;
+    font:              "JetBrainsMono Nerd Font Bold 12";
+}
+
+entry {
+    background-color:  transparent;
+    text-color:         @fg0;
+    placeholder:        "Buscar aplicativos...";
+    placeholder-color:  @fg1;
+    cursor:             text;
+}
+
+/* results list ---------------------------------------------------- */
+
+listview {
+    background-color: transparent;
+    columns:  1;
+    lines:    8;
+    spacing:  6px;
+    cycle:    true;
+    dynamic:  true;
+    layout:   vertical;
+
+    scrollbar: true;
+}
+
+scrollbar {
+    width:        4px;
+    border-radius: 4px;
+    handle-color:  @accent;
+    handle-width:  20px;
+    padding:       0;
+}
+
+element {
+    background-color: transparent;
+    text-color:        @fg1;
+    orientation:       horizontal;
+
+    border-radius: 8px;
+    padding:       8px 10px;
+    spacing:       10px;
+
+    cursor: pointer;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:        @fg1;
+}
+
+element alternate.normal {
+    background-color: @bg2;
+    text-color:        @fg1;
+}
+
+element selected.normal {
+    background-color: @accent;
+    text-color:        @selected-fg;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color: transparent;
+    text-color:        @urgent;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color:        @selected-fg;
+}
+
+element-icon {
+    size:             24px;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+}
+
+element-text {
+    text-color:      inherit;
+    vertical-align:  0.5;
+    horizontal-align: 0;
+}
+
+/* message / mode-switcher (unused by drun, kept for consistency) --- */
+
+message {
+    background-color: @bg1;
+    border:            1px 0px 0px;
+    border-color:      @bg3;
+    padding:           8px;
+}
+
+textbox {
+    text-color: @fg0;
+}
+
+mode-switcher {
+    background-color: transparent;
+    border:            1px 0px 0px;
+    border-color:      @bg3;
+    spacing:           6px;
+}
+
+button {
+    background-color: transparent;
+    text-color:        @fg1;
+    padding:           6px;
+    border-radius:     8px;
+}
+
+button selected {
+    background-color: @accent;
+    text-color:        @selected-fg;
+}
