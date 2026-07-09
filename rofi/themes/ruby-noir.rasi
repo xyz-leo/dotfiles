@@ -91,7 +91,7 @@ prompt {
 entry {
     background-color:  transparent;
     text-color:         @fg0;
-    placeholder:        "Buscar aplicativos...";
+    placeholder:        "Search...";
     placeholder-color:  @fg1;
     cursor:             text;
 }
