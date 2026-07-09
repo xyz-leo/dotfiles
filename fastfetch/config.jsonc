@@ -1,0 +1,22 @@
+{
+  "logo": {
+    "type": "auto",
+    "color": {
+      "1": "red",
+      "2": "red",
+      "3": "red",
+      "4": "red"
+    }
+  },
+  "modules": [
+    "title",
+    "os",
+    "kernel",
+    "uptime",
+    "shell",
+    "terminal",
+    "cpu",
+    "memory",
+    "colors"
+  ]
+}
