@@ -117,7 +117,9 @@ prompt_separate_home() {
   if [[ "$ans" =~ ^[Yy] ]]; then
     SEPARATE_HOME=true
     read -rp "Root partition size in GiB (default: $(( ROOT_SIZE_MIB / 1024 ))): " gib
-    [[ -n "$gib" ]] && ROOT_SIZE_MIB=$(( gib * 1024 ))
+    if [[ -n "$gib" ]]; then
+      ROOT_SIZE_MIB=$(( gib * 1024 ))
+    fi
   else
     SEPARATE_HOME=false
   fi
@@ -340,7 +342,9 @@ format_partitions() {
   mkswap "$SWAP_PART"
   swapon "$SWAP_PART"
   "mkfs.${ROOT_FS}" -F "$ROOT_PART"
-  [[ -n "$HOME_PART" ]] && "mkfs.${ROOT_FS}" -F "$HOME_PART"
+  if [[ -n "$HOME_PART" ]]; then
+    "mkfs.${ROOT_FS}" -F "$HOME_PART"
+  fi
 }
 
 mount_partitions() {
@@ -349,7 +353,9 @@ mount_partitions() {
   if [[ "$BOOT_MODE" == "uefi" ]]; then
     mount --mkdir "$EFI_PART" /mnt/boot
   fi
-  [[ -n "$HOME_PART" ]] && mount --mkdir "$HOME_PART" /mnt/home
+  if [[ -n "$HOME_PART" ]]; then
+    mount --mkdir "$HOME_PART" /mnt/home
+  fi
 }
 
 pacstrap_system() {
