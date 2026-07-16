@@ -90,10 +90,19 @@ else
 fi
 grub-mkconfig -o /boot/grub/grub.cfg
 
-if [[ "$DESKTOP_ENV" == "cinnamon" ]]; then
-  log "Enabling LightDM"
-  systemctl enable lightdm
+if [[ "$DESKTOP_ENV" != "none" ]]; then
+  case "$DESKTOP_ENV" in
+    cinnamon) display_manager="lightdm" ;;
+    gnome)    display_manager="gdm" ;;
+    kde)      display_manager="sddm" ;;
+    *) err "Unknown DESKTOP_ENV: $DESKTOP_ENV"; exit 1 ;;
+  esac
 
+  log "Enabling $display_manager"
+  systemctl enable "$display_manager"
+
+  # Read by both X11 sessions and Wayland compositors (via systemd-localed),
+  # so this applies regardless of which DE/session type is in use.
   mkdir -p /etc/X11/xorg.conf.d
   cat > /etc/X11/xorg.conf.d/00-keyboard.conf <<EOF
 Section "InputClass"

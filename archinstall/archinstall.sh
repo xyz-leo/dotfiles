@@ -110,6 +110,19 @@ prompt_boot_mode() {
   fi
 }
 
+prompt_separate_home() {
+  [[ "$AUTO_CONFIRM" == true ]] && return
+
+  read -rp "Create a separate /home partition? [y/N]: " ans
+  if [[ "$ans" =~ ^[Yy] ]]; then
+    SEPARATE_HOME=true
+    read -rp "Root partition size in GiB (default: $(( ROOT_SIZE_MIB / 1024 ))): " gib
+    [[ -n "$gib" ]] && ROOT_SIZE_MIB=$(( gib * 1024 ))
+  else
+    SEPARATE_HOME=false
+  fi
+}
+
 virt_packages_for() {
   case "$1" in
     oracle)    echo "virtualbox-guest-utils" ;;
@@ -123,6 +136,18 @@ de_packages_for() {
     cinnamon)
       echo "xorg-server xorg-xinit lightdm lightdm-gtk-greeter cinnamon gnome-terminal gvfs gvfs-smb network-manager-applet xdg-user-dirs"
       ;;
+    gnome)
+      # "gnome" group already pulls in gdm and the full core app set (files,
+      # terminal, settings, etc); "gnome-extra" adds the rest (archive
+      # manager, tweaks, boxes, ...) for a fuller install.
+      echo "gnome gnome-extra"
+      ;;
+    kde)
+      # "plasma" is the desktop shell; "kde-applications" is the full KDE
+      # app suite. Neither pulls in sddm itself (only its config module),
+      # so it's listed separately.
+      echo "plasma kde-applications sddm"
+      ;;
     none) echo "" ;;
     *) err "Unknown DESKTOP_ENV: $DESKTOP_ENV"; exit 1 ;;
   esac
@@ -131,19 +156,28 @@ de_packages_for() {
 prompt_install_type() {
   [[ "$AUTO_CONFIRM" == true ]] && return
 
-  local default=1
-  [[ "$DESKTOP_ENV" == "none" ]] && default=0
+  local default
+  case "$DESKTOP_ENV" in
+    none)     default=0 ;;
+    gnome)    default=2 ;;
+    kde)      default=3 ;;
+    *)        default=1 ;;  # cinnamon, or any unrecognized value in config.sh
+  esac
 
   echo
   echo "Install type:"
   echo "  0) Minimal (no desktop environment)"
-  echo "  1) Desktop environment (cinnamon)"
-  read -rp "Choice [0/1] (default: $default): " choice
+  echo "  1) Cinnamon"
+  echo "  2) GNOME (full)"
+  echo "  3) KDE Plasma (full)"
+  read -rp "Choice [0-3] (default: $default): " choice
   choice="${choice:-$default}"
 
   case "$choice" in
     0) DESKTOP_ENV="none" ;;
     1) DESKTOP_ENV="cinnamon" ;;
+    2) DESKTOP_ENV="gnome" ;;
+    3) DESKTOP_ENV="kde" ;;
     *) err "Invalid choice '$choice'."; exit 1 ;;
   esac
 }
@@ -172,6 +206,11 @@ confirm_plan() {
   fi
   echo "  Swap mode:  $SWAP_MODE"
   echo "  Root fs:    $ROOT_FS"
+  if [[ "$SEPARATE_HOME" == true ]]; then
+    echo "  Root size:  ${ROOT_SIZE_MIB}MiB, /home gets the rest"
+  else
+    echo "  Home:       none (/home lives on root)"
+  fi
   echo "  Hostname:   $HOSTNAME"
   echo "  User:       $USERNAME ($USER_GROUPS)"
   echo "  Locale:     $LOCALE_LANG (regional: $LOCALE_REGIONAL)"
@@ -219,39 +258,79 @@ partition_disk() {
     swap_mib="$SWAP_SIZE_MIB"
   fi
 
+  HOME_PART=""
+
   if [[ "$BOOT_MODE" == "uefi" ]]; then
     local efi_end=$(( 1 + EFI_SIZE_MIB ))
     local swap_end=$(( efi_end + swap_mib ))
 
-    parted --script "$DISK" \
-      mklabel gpt \
-      mkpart ESP fat32 1MiB "${efi_end}MiB" \
-      set 1 esp on \
-      mkpart primary linux-swap "${efi_end}MiB" "${swap_end}MiB" \
-      mkpart primary ext4 "${swap_end}MiB" 100%
+    if [[ "$SEPARATE_HOME" == true ]]; then
+      local root_end=$(( swap_end + ROOT_SIZE_MIB ))
 
-    partprobe "$DISK"
-    udevadm settle
+      parted --script "$DISK" \
+        mklabel gpt \
+        mkpart ESP fat32 1MiB "${efi_end}MiB" \
+        set 1 esp on \
+        mkpart primary linux-swap "${efi_end}MiB" "${swap_end}MiB" \
+        mkpart primary ext4 "${swap_end}MiB" "${root_end}MiB" \
+        mkpart primary ext4 "${root_end}MiB" 100%
 
-    EFI_PART=$(part_suffix "$DISK" 1)
-    SWAP_PART=$(part_suffix "$DISK" 2)
-    ROOT_PART=$(part_suffix "$DISK" 3)
+      partprobe "$DISK"
+      udevadm settle
+
+      EFI_PART=$(part_suffix "$DISK" 1)
+      SWAP_PART=$(part_suffix "$DISK" 2)
+      ROOT_PART=$(part_suffix "$DISK" 3)
+      HOME_PART=$(part_suffix "$DISK" 4)
+    else
+      parted --script "$DISK" \
+        mklabel gpt \
+        mkpart ESP fat32 1MiB "${efi_end}MiB" \
+        set 1 esp on \
+        mkpart primary linux-swap "${efi_end}MiB" "${swap_end}MiB" \
+        mkpart primary ext4 "${swap_end}MiB" 100%
+
+      partprobe "$DISK"
+      udevadm settle
+
+      EFI_PART=$(part_suffix "$DISK" 1)
+      SWAP_PART=$(part_suffix "$DISK" 2)
+      ROOT_PART=$(part_suffix "$DISK" 3)
+    fi
   else
     # No ESP needed for legacy BIOS: GRUB embeds itself in the MBR gap and
     # /boot just lives inside the root filesystem.
     local swap_end=$(( 1 + swap_mib ))
 
-    parted --script "$DISK" \
-      mklabel msdos \
-      mkpart primary linux-swap 1MiB "${swap_end}MiB" \
-      mkpart primary ext4 "${swap_end}MiB" 100% \
-      set 2 boot on
+    if [[ "$SEPARATE_HOME" == true ]]; then
+      local root_end=$(( swap_end + ROOT_SIZE_MIB ))
 
-    partprobe "$DISK"
-    udevadm settle
+      parted --script "$DISK" \
+        mklabel msdos \
+        mkpart primary linux-swap 1MiB "${swap_end}MiB" \
+        mkpart primary ext4 "${swap_end}MiB" "${root_end}MiB" \
+        set 2 boot on \
+        mkpart primary ext4 "${root_end}MiB" 100%
 
-    SWAP_PART=$(part_suffix "$DISK" 1)
-    ROOT_PART=$(part_suffix "$DISK" 2)
+      partprobe "$DISK"
+      udevadm settle
+
+      SWAP_PART=$(part_suffix "$DISK" 1)
+      ROOT_PART=$(part_suffix "$DISK" 2)
+      HOME_PART=$(part_suffix "$DISK" 3)
+    else
+      parted --script "$DISK" \
+        mklabel msdos \
+        mkpart primary linux-swap 1MiB "${swap_end}MiB" \
+        mkpart primary ext4 "${swap_end}MiB" 100% \
+        set 2 boot on
+
+      partprobe "$DISK"
+      udevadm settle
+
+      SWAP_PART=$(part_suffix "$DISK" 1)
+      ROOT_PART=$(part_suffix "$DISK" 2)
+    fi
   fi
 }
 
@@ -261,6 +340,7 @@ format_partitions() {
   mkswap "$SWAP_PART"
   swapon "$SWAP_PART"
   "mkfs.${ROOT_FS}" -F "$ROOT_PART"
+  [[ -n "$HOME_PART" ]] && "mkfs.${ROOT_FS}" -F "$HOME_PART"
 }
 
 mount_partitions() {
@@ -269,6 +349,7 @@ mount_partitions() {
   if [[ "$BOOT_MODE" == "uefi" ]]; then
     mount --mkdir "$EFI_PART" /mnt/boot
   fi
+  [[ -n "$HOME_PART" ]] && mount --mkdir "$HOME_PART" /mnt/home
 }
 
 pacstrap_system() {
@@ -339,6 +420,7 @@ main() {
 
   prompt_install_type
   prompt_boot_mode
+  prompt_separate_home
 
   detect_disk
   DETECTED_VIRT=$(detect_virt)

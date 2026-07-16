@@ -13,6 +13,14 @@ ROOT_FS="ext4"
 SWAP_MODE="auto"
 SWAP_SIZE_MIB=10240
 
+# SEPARATE_HOME=true carves out a dedicated /home partition: root gets a
+# fixed size (ROOT_SIZE_MIB) and /home takes all remaining space. false
+# keeps a single root partition using all remaining space (current
+# behavior). Overridden at runtime by the "separate /home?" prompt unless
+# AUTO_CONFIRM is true, in which case this value is used as-is.
+SEPARATE_HOME=false
+ROOT_SIZE_MIB=61440      # 60GiB; only used when SEPARATE_HOME=true
+
 # --- System identity ---
 HOSTNAME="arch"
 USERNAME="admin"
@@ -27,7 +35,7 @@ KEYMAP_X11_LAYOUT="us"
 KEYMAP_X11_MODEL="pc105"
 
 # --- Desktop environment ---
-# Supported: "cinnamon", "none"
+# Supported: "cinnamon", "gnome", "kde", "none"
 # Overridden at runtime by the "minimal or desktop environment" prompt unless
 # AUTO_CONFIRM is true, in which case this value is used as-is.
 DESKTOP_ENV="cinnamon"

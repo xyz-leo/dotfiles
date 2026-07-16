@@ -22,8 +22,9 @@ it's done.
 Live ISO (root)
  └─ archinstall.sh
       ├─ sanity checks: root / internet
-      ├─ prompt: minimal or desktop-environment install
+      ├─ prompt: minimal or desktop-environment install (Cinnamon/GNOME/KDE)
       ├─ prompt: BIOS or UEFI boot mode
+      ├─ prompt: separate /home partition?
       ├─ detect disk, CPU vendor, virtualization
       ├─ prompt passwords + prompt: update keyrings? + print plan + confirm
       ├─ partition (parted) → format → mount
@@ -35,7 +36,7 @@ Live ISO (root)
               ├─ enable NetworkManager
               ├─ set passwords, create user, configure sudo
               ├─ grub-install + grub-mkconfig
-              ├─ enable LightDM/Cinnamon (if configured)
+              ├─ enable display manager: LightDM/GDM/SDDM (if configured)
               └─ enable VM guest services (if detected)
  └─ unmount → done, reboot
 ```
@@ -78,12 +79,15 @@ Live ISO (root)
 2. `chmod +x archinstall.sh chroot-setup.sh`
 3. `./archinstall.sh`
 4. Answer the prompts as they come:
-   - **Install type**: `0` for minimal (no desktop environment), `1` for
-     desktop environment (Cinnamon). Defaults to whatever `DESKTOP_ENV` is
-     set to in `config.sh`.
+   - **Install type**: `0` for minimal (no desktop environment), `1`
+     Cinnamon, `2` GNOME (full), `3` KDE Plasma (full). Defaults to whatever
+     `DESKTOP_ENV` is set to in `config.sh`.
    - **Boot mode**: `0` for BIOS, `1` for UEFI (default). Pick based on how
      this session actually booted — UEFI only if `/sys/firmware/efi/efivars`
      exists.
+   - **Separate /home partition?**: `y`/`N` (default No). If yes, also asks
+     for the root partition size in GiB (default `ROOT_SIZE_MIB` from
+     `config.sh`); `/home` takes all remaining space.
    - Root and user passwords.
    - **Update keyrings?**: defaults to No. Only answer `y` if a previous run
      failed with a package-signature error — usually means the ISO is old
@@ -94,8 +98,8 @@ Live ISO (root)
 
 All of the above prompts are skipped entirely if `AUTO_CONFIRM=true` in
 `config.sh` — the install then runs unattended using `config.sh`'s values
-as-is (`DESKTOP_ENV` untouched, keyring not refreshed, boot mode defaults to
-UEFI).
+as-is (`DESKTOP_ENV` and `SEPARATE_HOME`/`ROOT_SIZE_MIB` untouched, keyring
+not refreshed, boot mode defaults to UEFI).
 
 ## Key `config.sh` options
 
@@ -105,12 +109,14 @@ UEFI).
 | `EFI_SIZE_MIB` | Fixed EFI System Partition size |
 | `SWAP_MODE` | `auto` (sized from RAM) or `fixed` (uses `SWAP_SIZE_MIB`) |
 | `ROOT_FS` | Root filesystem (currently `ext4` only) |
+| `SEPARATE_HOME` | `true` carves out a dedicated `/home` partition — default answer for the "separate /home?" prompt |
+| `ROOT_SIZE_MIB` | Root partition size when `SEPARATE_HOME=true`; `/home` gets all remaining space |
 | `HOSTNAME`, `USERNAME`, `USER_GROUPS` | System identity |
 | `LOCALE_LANG` / `LOCALE_REGIONAL` | Base locale vs. regional categories (time/money/paper/etc.) |
 | `TIMEZONE` | e.g. `UTC` |
 | `KEYMAP_CONSOLE` / `KEYMAP_X11_LAYOUT` / `KEYMAP_X11_MODEL` | TTY keymap vs. graphical (X11) keymap |
-| `DESKTOP_ENV` | `cinnamon` or `none` (headless) — default answer for the install-type prompt |
-| `AUTO_CONFIRM` | `true` skips *all* prompts (install type, boot mode, keyring update, confirmation) and runs unattended, defaulting to UEFI — use with care |
+| `DESKTOP_ENV` | `cinnamon`, `gnome`, `kde`, or `none` (headless) — default answer for the install-type prompt |
+| `AUTO_CONFIRM` | `true` skips *all* prompts (install type, boot mode, separate /home, keyring update, confirmation) and runs unattended, defaulting to UEFI — use with care |
 
 ## Status
 
@@ -118,5 +124,6 @@ Verified end-to-end in a VirtualBox VM, both `DESKTOP_ENV=cinnamon` and
 `DESKTOP_ENV=none`, both with and without the keyring-update prompt: boots
 cleanly, no repeat of the initrd-hang issue seen during the manual install.
 
-Not yet exercised: the multi-disk selection prompt, `SWAP_MODE=fixed`, and
-real bare-metal hardware.
+Not yet exercised: the multi-disk selection prompt, `SWAP_MODE=fixed`,
+`SEPARATE_HOME=true`, `DESKTOP_ENV=gnome`/`kde`, and real bare-metal
+hardware.
